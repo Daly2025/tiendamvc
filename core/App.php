@@ -1,59 +1,59 @@
 <?php
+
 namespace Formacom\Core;
-class App{
-    protected $controller="Formacom\\Controllers\\MainController";
-    protected $method="index";
-    protected $params=[];
+
+class App {
+    protected $controller = "Formacom\\controllers\\MainController"; // Espacio de nombres correcto
+    protected $method = "index";
+    protected $params = [];
     protected $middlewares = [];
 
-    public function __construct(){
-        $url=$this->parseUrl();
-       
-         // Verificar el controlador
-         if(file_exists('./app/controllers/' . ucfirst($url[0]) . 'Controller.php')) {
-            $this->controller = "Formacom\\Controllers\\".ucfirst($url[0]) . 'Controller';
+    public function __construct() {
+        $url = $this->parseUrl();
+
+        // Verificar si el archivo del controlador existe
+        $controllerFile = './controllers/' . ucfirst($url[0]) . 'Controller.php';
+        if (file_exists($controllerFile)) {
+            $this->controller = "Formacom\\controllers\\" . ucfirst($url[0]) . 'Controller';
             unset($url[0]);
         }
-        $this->controller = new $this->controller;
 
-         // Verificar el método
-         if(isset($url[1])) {
-            if(method_exists($this->controller, $url[1])) {
-                $this->method = $url[1];
-                unset($url[1]);
-            }
+        // Instanciar el controlador
+        if (class_exists($this->controller)) {
+            $this->controller = new $this->controller;
+        } else {
+            die("El controlador {$this->controller} no se encuentra.");
         }
-           // Parámetros
-           $this->params = $url ? array_values($url) : [];
-           //Lo ejecutamos despues del midelware
-           //call_user_func_array([$this->controller, $this->method], $this->params);
+
+        // Verificar el método dentro del controlador
+        if (isset($url[1]) && method_exists($this->controller, $url[1])) {
+            $this->method = $url[1];
+            unset($url[1]);
+        }
+
+        // Parámetros
+        $this->params = $url ? array_values($url) : [];
+
+        // Ejecutar el controlador y método
+        // call_user_func_array([$this->controller, $this->method], $this->params); (comenta esto si usas middleware)
     }
-     /**
-     * Permite agregar middlewares a la aplicación.
-     * @param object $middleware
-     */
+
+    // Agregar middlewares
     public function addMiddleware($middleware) {
         $this->middlewares[] = $middleware;
     }
-/**
-     * Ejecuta la aplicación: se añade el nombre del controlador al request y se aplican los middlewares.
-     */
+
+    // Ejecutar la aplicación y middlewares
     public function run() {
-        // Preparamos un request simulando un array (puedes usar un objeto Request si lo prefieres)
         $request = $_SERVER;
-        // Agregamos el nombre del controlador para que el middleware lo conozca
         $request['controller'] = get_class($this->controller);
 
         $this->applyMiddlewares($request, function($request) {
             call_user_func_array([$this->controller, $this->method], $this->params);
         });
     }
-    /**
-     * Aplica recursivamente los middlewares.
-     * @param array $request
-     * @param callable $next
-     * @param int $index
-     */
+
+    // Aplicar middlewares en cascada
     protected function applyMiddlewares($request, $next, $index = 0) {
         if (isset($this->middlewares[$index])) {
             $middleware = $this->middlewares[$index];
@@ -64,11 +64,14 @@ class App{
             $next($request);
         }
     }
+
+    // Parsear la URL
     private function parseUrl() {
-        if(isset($_GET['url'])) {
+        if (isset($_GET['url'])) {
             return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
         }
-        return ['main','index'];
+        return ['main', 'index']; // Controlador y método por defecto
     }
 }
+
 ?>
