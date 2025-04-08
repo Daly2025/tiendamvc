@@ -27,37 +27,23 @@
         <div class="collapse navbar-collapse" id="navbarScroll">
             <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 500px;">
                 <li class="nav-item">
-                    <a href="<?= base_url() ?>provider">
+                    <a href="<?= base_url() ?>gestor">
                         <div>
                             <i class="fa-solid fa-3x fa-building"></i>
-                            <p>Providers</p>
+                            <p>Gestores</p>
                         </div>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url() ?>customer">
+                    <a href="<?= base_url() ?>colaborador">
                         <div>
                             <i class="fa-solid fa-3x fa-circle-user"></i>
-                            <p>Customer</p>
+                            <p>Colaborador</p>
                         </div>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="<?= base_url() ?>product">
-                        <div>
-                            <i class="fa-solid fa-3x fa-shop"></i>
-                            <p>Products</p>
-                        </div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?= base_url() ?>sale">
-                        <div>
-                            <i class="fa-brands fa-3x fa-salesforce"></i></i>
-                            <p>Sales</p>
-                        </div>
-                    </a>
-                </li>
+              
+        
             </ul>
         </div>
     </div>

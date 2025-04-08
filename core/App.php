@@ -1,7 +1,7 @@
 <?php
 namespace Formacom\Core;
 class App{
-    protected $controller="Formacom\\Controllers\\LoginController";
+    protected $controller="Formacom\\Controllers\\MainController";
     protected $method="index";
     protected $params=[];
     protected $middlewares = [];
@@ -68,7 +68,7 @@ class App{
         if(isset($_GET['url'])) {
             return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
         }
-        return ['login','index'];
+        return ['main','index'];
     }
 }
 ?>
