@@ -1,9 +1,8 @@
 <?php
-
 namespace Formacom\Core;
 
 class App {
-    protected $controller = "Formacom\\controllers\\MainController"; // Espacio de nombres correcto
+    protected $controller = "Formacom\\controllers\\GestorController"; // Espacio de nombres correcto
     protected $method = "index";
     protected $params = [];
     protected $middlewares = [];
@@ -11,12 +10,11 @@ class App {
     public function __construct() {
         $url = $this->parseUrl();
 
-        // Verificar si el archivo del controlador existe
-        $controllerFile = './controllers/' . ucfirst($url[0]) . 'Controller.php';
-        if (file_exists($controllerFile)) {
+        if (class_exists("Formacom\\controllers\\" . ucfirst($url[0]) . 'Controller')) {
             $this->controller = "Formacom\\controllers\\" . ucfirst($url[0]) . 'Controller';
             unset($url[0]);
         }
+        
 
         // Instanciar el controlador
         if (class_exists($this->controller)) {
@@ -70,7 +68,7 @@ class App {
         if (isset($_GET['url'])) {
             return explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
         }
-        return ['main', 'index']; // Controlador y método por defecto
+        return ['gestor', 'index']; // Controlador y método por defecto
     }
 }
 
